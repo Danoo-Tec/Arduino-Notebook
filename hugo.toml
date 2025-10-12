@@ -1,4 +1,4 @@
-baseURL = "http://localhost:1313/"
+baseURL = "https://ddvlogs.me/"
 languageCode = "es"
 title = "Arduino Notebook | d4n13l_"
 theme = "PaperMod"
