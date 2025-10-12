@@ -2,10 +2,18 @@ baseURL = "https://ddvlogs.me/"
 languageCode = "es"
 title = "Arduino Notebook | d4n13l_"
 theme = "PaperMod"
+canonifyURLs = true
+relativeURLs = true
 
 # NUEVO: tamaño de página (antes era `paginate`)
 [pagination]
   pagerSize = 20
+
+[menu]
+  [[menu.main]]
+    name = "Inicio"
+    url = ""
+    weight = 1
 
 # Qué secciones salen en la home como cards
 mainSections = ["files"]
@@ -17,7 +25,7 @@ mainSections = ["files"]
 
 [params]
   disableSpecial1stPost = true
-  ShowReadingTime = true
+  ShowReadingTime = false
   ShowBreadCrumbs = true
   ShowCodeCopyButtons = true
-  ShowPostNavLinks = true
+  ShowPostNavLinks = false
