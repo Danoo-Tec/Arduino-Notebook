@@ -1,0 +1,10 @@
+:root{
+  /* Ancho global del contenido en PaperMod */
+  --main-width: 1100px;  /* p. ej. 1100–1200px */
+}
+
+/* Opcional: que el código aproveche el ancho y no desborde feo */
+.post-content pre{
+  max-width: 100%;
+  overflow-x: auto;
+}

@@ -1,0 +1,23 @@
+baseURL = "http://localhost:1313/"
+languageCode = "es"
+title = "Arduino Notebook | d4n13l_"
+theme = "PaperMod"
+
+# NUEVO: tamaño de página (antes era `paginate`)
+[pagination]
+  pagerSize = 20
+
+# Qué secciones salen en la home como cards
+mainSections = ["files"]
+
+[markup.highlight]
+  guessSyntax = true
+  lineNos = true
+  style = "dracula"
+
+[params]
+  disableSpecial1stPost = true
+  ShowReadingTime = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowPostNavLinks = true
