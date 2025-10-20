@@ -1,3 +1,9 @@
+---
+title: "Proyecto 4 - Mando analógico"
+date: 2025-10-16
+draft: false
+---
+
 En este proyecto usamos por primera vez un **potenciómetro** para generar una señal analógica que Arduino leerá por un pin **analógico** (A0). El cableado es: una patilla exterior del potenciómetro a **5V**, la otra exterior a **GND**, y la patilla central a **A0**. Así, al girar el pote, la tensión en A0 cambia suave entre 0 V y 5 V. Importante: **GND común** entre todo.
 
 Luego vamos a usar 5 Leds todos ellas del mismo color por preferencia y que todas ellas utilicen la misma resistencia. 
