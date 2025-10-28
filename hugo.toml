@@ -29,3 +29,6 @@ mainSections = ["files"]
   ShowBreadCrumbs = true
   ShowCodeCopyButtons = true
   ShowPostNavLinks = false
+
+[params.assets]
+  favicon = "favicon.svg"
