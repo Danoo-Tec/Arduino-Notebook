@@ -76,6 +76,7 @@ Esta función:
 4. Permite elegir el orden de envío: `MSBFIRST` (bit más significativo primero) o `LSBFIRST` (bit menos significativo primero).
 
 Pero no solo funcionará así, sino que antes y después de llamar a esa función hay que provocar un "pulso" en el pin Latch (ST_CP) para que los datos pasen del shift register al storage register y podamos ver los cambios reflejados en los LEDs.
+El 74HC595 captura los datos en el flanco de subida del reloj (SH_CP) y transfiere los valores a las salidas en el flanco de subida del Latch (ST_CP).
 
 Esto lo podemos hacer de la siguiente manera:
 
