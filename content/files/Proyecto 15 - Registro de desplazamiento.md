@@ -224,64 +224,6 @@ void actualizar_leds(byte valor) {
   digitalWrite(PIN_ST_CP, LOW);
   shiftOut(PIN_DS, PIN_SH_CP, LSBFIRST, valor);
   digitalWrite(PIN_ST_CP, HIGH);
-}](<#include %3CArduino.h%3E // No necesario si trabajas en el IDE de Arduino
-
-#define PIN_DS 8              // Data (SER)    - PIN 74HC595: 14
-#define PIN_ST_CP 9           // Latch (RCLK)  - PIN 74HC595: 12
-#define PIN_SH_CP 10          // Clock (SRCLK) - PIN 74HC595: 11
-#define PIN_POTENCIOMETRO A0  // Pin del potenciómetro
-
-// Prototipos de las fucniones
-void actualizar_leds(byte v);
-
-// Variables para un sistema no bloqueante con millis
-unsigned long actual = 0;         // Variable en la que voy guardando el tiempo actual
-unsigned long pasado = 0;         // Variable para comprobar si ha pasado el tiempo
-unsigned long milisegundos = 500; // Espero medio segundo entre actualizaciones de Leds
-byte valor_anterior = 0;          // Variable para no actualizar los leds si es el mismo valor
-
-
-void setup() {
-  Serial.begin(9600);
-
-  Serial.println("=== Registro de Desplazamiento 74HC595 ===");
-  Serial.println("Introduce un numero 0-255");
-
-  pinMode(PIN_DS, OUTPUT);
-  pinMode(PIN_SH_CP, OUTPUT);
-  pinMode(PIN_ST_CP, OUTPUT);
-  pinMode(PIN_POTENCIOMETRO, INPUT);
-
-  digitalWrite(PIN_ST_CP, LOW);
-  digitalWrite(PIN_SH_CP, LOW);
-  digitalWrite(PIN_DS, LOW);
-
-  actualizar_leds(0); // Por defecto apagamos todos los leds: 0 -> 00000000 (8 Leds en OFF)
-}
-
-void loop() {
-  int lectura = analogRead(PIN_POTENCIOMETRO);
-
-  // Mapeo el valor analógico a un valor en el rango de un Byte
-  byte valor_actual = map(lectura, 0, 1023, 0, 255);
-
-  actual = millis(); // A cada vuelta del bucle me quedo con el tiempo actual (ms)
-
-  // Si ha pasado el tiempo correspondiente actualizo los leds
-  if (actual - pasado >= milisegundos && valor_actual != valor_anterior) {
-    actualizar_leds(valor_actual);
-    pasado = actual;               // Actualizo el tiempo
-    valor_anterior = valor_actual; // Actualizo los valores
-  }
-}
-
-void actualizar_leds(byte valor) {
-  Serial.print("Actualizando a: ");
-  Serial.println(valor);
-
-  digitalWrite(PIN_ST_CP, LOW);
-  shiftOut(PIN_DS, PIN_SH_CP, LSBFIRST, valor);  // <-- Envio el valor
-  digitalWrite(PIN_ST_CP, HIGH);
 }
 ```
 
