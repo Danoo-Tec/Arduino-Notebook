@@ -459,9 +459,70 @@ bool detectar_flanco_subida() {
 }
 ```
 
-## Detalles sobre el código y posibles mejoras
+### Detalles sobre el código y posibles mejoras
 
 * He implementado una **zona muerta del joystick** con rangos como `480–580` para evitar movimientos involuntarios cuando el joystick no está perfectamente centrado.
 * El pulsador tiene **antirrebote por tiempo** usando `millis()`, de forma que no se detecten varias pulsaciones por una sola pulsación física.
 * La constante `Y_MAYOR_700_SUBE` permite adaptar el sentido vertical del joystick sin tener que reescribir la lógica del programa.
 * Otra posibilidad habría sido usar el **registro de desplazamiento 74HC595** para ahorrar pines del Arduino y simplificar parte del cableado del visualizador.
+
+
+## Mostrar los 4 dígitos a la vez (multiplexado del display)
+
+Una vez hemos terminado el proyecto anterior, como hemos podido comprobar, solo veíamos encendido a la vez un solo dígito. Por lo tanto, para saber la jugada que íbamos a mandar, había que recordar las letras y números que habíamos elegido. Pero claro, ¿y si quisiéramos mostrar los 4 dígitos a la vez? Bueno, pues podríamos ir refrescando el display cada **3 ms**, por ejemplo. Y con esto me refiero a ir encendiendo los dígitos uno por uno, pero hacerlo tan rápido que parece que están todos encendidos a la vez.
+
+A esta técnica se la conoce como **multiplexado del display**. Realmente no están los 4 dígitos encendidos al mismo tiempo, sino que se van activando de manera secuencial muy rápido. Como ese refresco es tan rápido, a simple vista da la sensación de que están todos encendidos a la vez.
+
+Para implementar esto en el código anterior, lo que he hecho ha sido incluir la siguiente función. Además, para que esto funcione bien, `puntoEncendido` tiene que pasar a ser una **variable global**, ya que ahora no solo se usa dentro de la función del parpadeo, sino también dentro de la función que refresca el display:
+
+```c++
+void refrescarDisplay() {
+  unsigned long ahora = millis();
+  static unsigned long ultimoRefresco = 0;
+  static int digitoMostrado = 1;
+  byte patron = SEGMENTOS[valoresDigitos[digitoMostrado - 1]];
+
+  // Refrescamos las pantallas cada 3 milisegundos
+  if (ahora - ultimoRefresco < 3) {
+    return;
+  }
+
+  if (digitoMostrado == digitoActual && puntoEncendido) {
+    patron |= 0b00000001; // Si es el dígito actual, el punto parpadea
+  }
+
+  pintarSegmento(patron);
+  elegirDigito(digitoMostrado);
+
+  digitoMostrado++;
+  if (digitoMostrado > 4) {
+    digitoMostrado = 1;
+  }
+
+  ultimoRefresco = ahora;
+}
+```
+
+En esta función incorporamos `millis()` para refrescar la pantalla cada esos **3 ms** y, en caso de que no hayan pasado, salimos de la función. Para el apartado del patrón, este será el símbolo correspondiente al dígito con el que estamos trabajando en ese momento.
+
+Una vez tenemos eso, con una operación bitwise `OR` conseguimos mantener todos los bits como estaban y poner a `1` el bit menos significativo, que corresponde al punto decimal. De esta manera, dependiendo de la variable global, encenderemos o no el punto decimal.
+
+Ya con esto, pinto los segmentos correspondientes según el patrón y lo muestro en el dígito actual. Ya por último me muevo al siguiente dígito y, en caso de que este sea mayor que 4, vuelvo al principio.
+
+Como te habrás podido fijar, la lógica del punto decimal está cambiada, ya que antes la función del punto decimal se encargaba de pintar los segmentos. Ahora solo actualiza una variable global de `1 -> 0` o de `0 -> 1` cada medio segundo.
+
+La función modificada ha quedado así:
+
+```c++
+void parpadeoPunto() {
+  unsigned long ahora = millis();
+  static unsigned long ultimoParpadeo = 0;
+
+  if (ahora - ultimoParpadeo >= 500) {
+    puntoEncendido = !puntoEncendido;
+    ultimoParpadeo = ahora;
+  }
+}
+```
+
+Ya para implementarlo en el código sería agregar la función `refrescarDisplay()` en el `loop()` y listo, a funcionar.
